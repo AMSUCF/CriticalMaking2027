@@ -324,3 +324,10 @@ def test_update_rubric_and_find_rubric():
     assert form(rsp.calls[0])["rubric_association_id"] == "62"
     assert c42().find_rubric("Making Exercise Rubric") == 31
     assert c42().find_rubric("Other") is None
+
+
+@responses.activate
+def test_set_course_image_puts_image_id():
+    responses.put(COURSE, json={"id": 42, "image_id": "55"})
+    c42().set_course_image(55)
+    assert sent(responses.calls[0]) == {"course": {"image_id": 55}}

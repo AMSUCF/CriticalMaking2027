@@ -189,3 +189,13 @@ def test_apply_canvas_style_band():
     assert f"border-top: 6px solid {ACCENT_COLOR}" in out
     assert f">{ACCENT_LABEL}</span>" in out
     assert out.endswith("<p>x</p>")
+
+
+def test_canvas_band_uses_quilt_palette():
+    # the site's quilt fabrics (assets/css/style.scss): violet band,
+    # sunflower pill with violet text, raspberry dashed "stitch" line
+    out = apply_canvas_style("<p>x</p>")
+    assert ACCENT_COLOR == "#4b2e83"
+    assert "background: #f4c430" in out and "color: #4b2e83" in out
+    assert "border-bottom: 2px dashed #c2185b" in out
+    assert "#0b7a75" not in out

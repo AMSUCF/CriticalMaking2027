@@ -1,3 +1,7 @@
+# Secrets: any .env (or .env.local, .env.bak, ...) anywhere; only the placeholder example is tracked
+.env
+.env.*
+!.env.example
 canvas/.env
 canvas/preview/
 canvas/.state.json

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- Canvas course-card image: the site header's quilt panel (assets/css/style.scss,
+     .quilt-header and .applique) without the label, at 4x the 262x146 card size.
+     Render: chrome --headless --screenshot=canvas/course_image.png
+             --window-size=1048,584 --hide-scrollbars canvas/tools/course_image.html -->
+<html><head><meta charset="utf-8"><style>
+  :root { --sun:#f4c430; --violet:#4b2e83; --raspberry:#c2185b; --lilac:#cbb2f0;
+          --mat:#2f5b73; --marigold:#e9782b; }
+  html, body { margin:0; width:1048px; height:584px; overflow:hidden; }
+  .quilt { position:relative; box-sizing:border-box; width:1048px; height:584px; overflow:hidden;
+    background-color:var(--sun);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='70' viewBox='0 0 140 70'%3E%3Cpath d='M0 18 C 20 2, 50 34, 70 18 S 120 2, 140 18 M0 53 C 20 37, 50 69, 70 53 S 120 37, 140 53' fill='none' stroke='%23a86d00' stroke-width='2' stroke-dasharray='6 4' stroke-linecap='round' opacity='.5'/%3E%3C/svg%3E");
+    background-size:280px 140px;
+    border-top:24px solid var(--violet); border-bottom:24px solid var(--violet); }
+  .quilt::before, .quilt::after { content:""; position:absolute; left:0; right:0; z-index:3;
+    border-bottom:4px dashed rgba(75,46,131,.6); }
+  .quilt::before { top:12px; } .quilt::after { bottom:12px; }
+  .applique { position:absolute; outline:4px dashed rgba(255,248,231,.75); outline-offset:-14px; }
+  .a1 { width:440px; height:340px; left:-80px; top:36px; background:var(--violet);
+        border-radius:58% 42% 63% 37% / 45% 58% 42% 55%; transform:rotate(-12deg); }
+  .a2 { width:300px; height:240px; right:7%; top:-60px; background:var(--raspberry);
+        border-radius:40% 60% 35% 65% / 60% 40% 60% 40%; }
+  .a3 { width:240px; height:240px; right:22%; bottom:-92px; background:var(--lilac);
+        border-radius:50% 50% 45% 55% / 55% 45% 55% 45%; outline-color:rgba(75,46,131,.5); }
+  .a4 { width:220px; height:220px; left:27%; bottom:-72px; border-radius:12px; transform:rotate(9deg);
+        background:linear-gradient(135deg, var(--mat) 0 50%, var(--marigold) 50% 100%);
+        outline-color:rgba(255,248,231,.6); }
+</style></head><body><div class="quilt">
+  <div class="applique a1"></div><div class="applique a2"></div>
+  <div class="applique a3"></div><div class="applique a4"></div>
+</div></body></html>

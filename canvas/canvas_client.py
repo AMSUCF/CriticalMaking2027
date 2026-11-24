@@ -267,6 +267,10 @@ class CanvasClient:
         r.raise_for_status()
         return r.json()
 
+    def set_course_image(self, file_id) -> dict:
+        """Dashboard card image: an uploaded course file's id."""
+        return self._put(self.course, {"course": {"image_id": file_id}})
+
     # --- files and media ----------------------------------------------------
 
     def upload_file(self, path, folder: str, content_type: str) -> dict:

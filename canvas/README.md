@@ -157,6 +157,21 @@ listed at once).
 | `interviews` | `key: {guest, video, captions}`; paths relative to `canvas/`, `null` if none. |
 | `pdfs` | `stem: [path, …]`; a path, or `{file, title}` for custom link text (default: file name without extension). |
 | `expect_course_code` | Optional: abort unless the Canvas course code contains this string. |
+| `course_image` | Dashboard card image, relative to `canvas/`. With `--all` it is uploaded to **Files → Course Image** (only when its SHA-256 changes) and set as the course image. |
+
+The course image (`course_image.png`, 1048×584, four times Canvas's 262×146
+card) is the site header's quilt panel without its label, rendered from
+`tools/course_image.html`:
+
+```
+"C:\Program Files\Google\Chrome\Application\chrome.exe" --headless=new --hide-scrollbars ^
+  --window-size=1048,584 --screenshot=%CD%\course_image.png tools\course_image.html
+```
+
+Every page the deployer writes starts with a band in the same quilt fabrics
+(violet binding, a sunflower "Critical Making" label, a raspberry stitch
+line), set in `converter.py`. Canvas strips stylesheets and web fonts, so
+the band uses inline colours and borders only.
 
 ## Media workflow (Canvas-only)
 

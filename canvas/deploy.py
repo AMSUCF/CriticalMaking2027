@@ -312,6 +312,8 @@ def main(argv=None) -> int:
                 apply_canvas_style(render_html(syllabus_md, cfg["site_base"])),
                 encoding="utf-8")
             print("[dry-run] Syllabus page")
+            if cfg.get("course_image") and media.course_image(cfg["course_image"]):
+                print(f"[dry-run] course image: {cfg['course_image']}")
         return 0
 
     _load_env()
@@ -347,6 +349,15 @@ def main(argv=None) -> int:
                  for s in present]
         _deploy(client, cfg, args, state, plans, breaks, positions, welcome_md,
                 syllabus_md, now)
+        if args.all and cfg.get("course_image"):
+            try:
+                fid = media.course_image(cfg["course_image"])
+                if fid is not None and state.get("course_image_id") != fid:
+                    client.set_course_image(fid)
+                    state["course_image_id"] = fid
+                    print("deployed: course image")
+            except requests.HTTPError as e:
+                raise SystemExit(f"deploy failed at 'course image': {e}")
     finally:
         _save_state(state)
     return 0

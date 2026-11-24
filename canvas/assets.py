@@ -11,9 +11,10 @@ import hashlib
 import html as _html
 from pathlib import Path
 
-FOLDERS = {"video": "Interviews", "pdf": "Readings"}
+FOLDERS = {"video": "Interviews", "pdf": "Readings", "image": "Course Image"}
 TYPES = {".mp4": "video/mp4", ".m4v": "video/mp4", ".mov": "video/quicktime",
-         ".webm": "video/webm", ".pdf": "application/pdf"}
+         ".webm": "video/webm", ".pdf": "application/pdf",
+         ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg"}
 
 
 def sha256_file(path: Path) -> str:
@@ -101,6 +102,11 @@ class Media:
 
     def video_id(self, key):
         return self._videos.get(key)
+
+    def course_image(self, rel):
+        """Upload (if changed) the dashboard card image; returns its file id
+        (FILE-<name> in a dry run), or None if the file is missing."""
+        return self._file(rel, "image")
 
     # --- sync ---------------------------------------------------------------
     def sync(self, stems, interview_keys: dict) -> None:

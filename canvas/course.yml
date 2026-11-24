@@ -2,6 +2,7 @@ site_base: https://anastasiasalter.net/CriticalMaking2027
 timezone: America/New_York      # informational: the deployer always uses America/New_York
 syllabus_file: index.md
 welcome_file: welcome.md        # repo-root md -> page "Welcome! (Read this first!)", first item of the first week
+course_image: course_image.png  # dashboard card (relative to canvas/); source: tools/course_image.html
 assignment_groups: {exercises: Making Exercises, other: Course Requirements}
 weeks: [exercises/introductions, exercises/one_selfie, exercises/two_comic, exercises/three_gifs,
         exercises/four_maps, exercises/five_hypertext, exercises/six_game, exercises/seven_generator,

@@ -11,8 +11,12 @@ from zoneinfo import ZoneInfo
 import frontmatter
 from markdown_it import MarkdownIt
 
-# one accent band for every Canvas page this course deploys
-ACCENT_COLOR = "#0b7a75"
+# one accent band for every Canvas page this course deploys, in the site's
+# quilt fabrics (assets/css/style.scss). Canvas strips <style> and web fonts,
+# so the band uses inline colours and borders only.
+ACCENT_COLOR = "#4b2e83"   # violet
+PILL_COLOR = "#f4c430"     # sunflower
+STITCH_COLOR = "#c2185b"   # raspberry
 ACCENT_LABEL = "Critical Making"
 
 REQUIRED_KEYS = ("module", "week_start", "due", "points")
@@ -170,10 +174,12 @@ def lock_at_utc(due_date, grace_days: int = 7, grace_hours: int | None = None) -
 
 def apply_canvas_style(html: str) -> str:
     band = (
-        f'<div style="border-top: 6px solid {ACCENT_COLOR}; padding: 12px 0 4px 0; '
+        f'<div style="border-top: 6px solid {ACCENT_COLOR}; '
+        f'border-bottom: 2px dashed {STITCH_COLOR}; padding: 12px 0 10px 0; '
         f'margin-bottom: 16px;"><span style="display: inline-block; '
-        f'padding: 2px 10px; border-radius: 9999px; background: {ACCENT_COLOR}; '
-        f'color: #ffffff; font-size: 12px; letter-spacing: 1px; '
+        f'padding: 2px 12px; border-radius: 9999px; background: {PILL_COLOR}; '
+        f'color: {ACCENT_COLOR}; border: 2px solid {ACCENT_COLOR}; '
+        f'font-size: 12px; font-weight: bold; letter-spacing: 1px; '
         f'text-transform: uppercase;">{ACCENT_LABEL}</span></div>'
     )
     return band + html

@@ -46,7 +46,7 @@ def test_plan_week_path_stem_links_and_dates(course):
     assert f'href="{SITE}/exercises/two_comic"' in html     # extensionless sibling
     assert f'href="{SITE}/index.html#weekly-schedule"' in html
     assert 'href="#the-selfie-prompt"' in html and 'href="https://example.org/x"' in html
-    assert "border-top: 6px solid #0b7a75" in html
+    assert "border-top: 6px solid #4b2e83" in html
     assert "Share approximately five images" in p["graded_html"]
     assert "Share approximately" not in html
 
@@ -290,6 +290,8 @@ class FakeCanvas:
         return known_id or 62
     def update_rubric(self, rubric_id, title, criteria, association_id=None):
         self.calls.append(("update-rubric", rubric_id, association_id)); return rubric_id
+    def set_course_image(self, file_id):
+        self.calls.append(("course-image", file_id))
 
 
 def _live(monkeypatch, canvas, fake, state=None):
@@ -616,3 +618,39 @@ def test_missing_env_is_a_clean_exit_naming_the_env_path(course, monkeypatch):
         deploy.main(["--week", "one_selfie"])
     assert str(course / ".env") in str(e.value) and "CANVAS_API_URL" in str(e.value)
     assert calls and Path(calls[0][0]) == course / ".env"
+
+
+def _with_course_image(canvas):
+    (canvas / "course_image.png").write_bytes(b"\x89PNG\r\n\x1a\n quilt")
+    cfg = canvas / "course.yml"
+    cfg.write_text(cfg.read_text(encoding="utf-8") + "\ncourse_image: course_image.png\n",
+                   encoding="utf-8")
+
+
+def test_course_image_uploaded_and_set_once(course, monkeypatch, capsys):
+    _with_course_image(course)
+    fake = _live(monkeypatch, course, FakeCanvas())
+    assert deploy.main(["--all"]) == 0
+    assert ("upload", "course_image.png", "Course Image", "image/png") in fake.calls
+    fid = _state(course)["files"]["course_image.png"]["id"]
+    assert fake.of("course-image") == [("course-image", fid)]
+    assert _state(course)["course_image_id"] == fid
+    assert "deployed: course image" in capsys.readouterr().out
+    # unchanged image: no re-upload, no settings call
+    fake = _live(monkeypatch, course, FakeCanvas(bodies={}))
+    assert deploy.main(["--all"]) == 0
+    assert not fake.of("upload") and not fake.of("course-image")
+
+
+def test_course_image_only_with_all(course, monkeypatch):
+    _with_course_image(course)
+    fake = _live(monkeypatch, course, FakeCanvas())
+    assert deploy.main(["--week", "one_selfie"]) == 0
+    assert not fake.of("course-image")
+    assert all(c[1] != "course_image.png" for c in fake.of("upload"))
+
+
+def test_dry_run_reports_course_image(course, capsys):
+    _with_course_image(course)
+    assert deploy.main(["--all", "--dry-run"]) == 0
+    assert "[dry-run] course image: course_image.png" in capsys.readouterr().out
