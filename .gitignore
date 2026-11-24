@@ -1,0 +1,10 @@
+canvas/.env
+canvas/preview/
+canvas/.state.json
+canvas/media/
+*.imscc
+__pycache__/
+.venv/
+.pytest_cache/
+_site/
+.venv-media/

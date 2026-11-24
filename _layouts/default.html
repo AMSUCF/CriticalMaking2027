@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'en-US' }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+    <meta name="description" content="{{ site.description }}">
+    <script>
+      // Saved choice, else the reader's system setting.
+      (function () {
+        var saved = null;
+        try { saved = localStorage.getItem('theme'); } catch (e) {}
+        var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', saved || (dark ? 'dark' : 'light'));
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..900,0..100,0..1;1,9..144,400..900,0..100,0..1&family=Figtree:ital,wght@0,400..800;1,400..800&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+  </head>
+
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch between daylight and lamplight colors">
+      <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.5"></circle>
+        <path d="M12 1.5v2.5M12 20v2.5M1.5 12H4M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"></path>
+      </svg>
+      <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+      </svg>
+    </button>
+
+    <header class="quilt-header">
+      <div class="applique a1" aria-hidden="true"></div>
+      <div class="applique a2" aria-hidden="true"></div>
+      <div class="applique a3" aria-hidden="true"></div>
+      <div class="applique a4" aria-hidden="true"></div>
+      <div class="quilt-label">
+        <p class="label-kicker">a course in critical making</p>
+        <p class="site-title"><a href="{{ '/' | relative_url }}">{{ site.title }}</a></p>
+        <p class="site-description">{{ site.description }}</p>
+      </div>
+    </header>
+
+    <div class="selvedge" aria-hidden="true">
+      <span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      <span>ENG 6819 &middot; Spring 2027 &middot; 100% cotton, 100% code &middot; pieced &amp; quilted at UCF &middot; Texts &amp; Technology</span>
+      <span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
+
+    <main class="wrapper" id="content">
+      {% unless page.url == '/' %}
+      <nav class="back-link"><a href="{{ '/' | relative_url }}">&larr; Back to the syllabus</a></nav>
+      {% endunless %}
+      <section class="content">
+        {{ content }}
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-label">
+        <p class="footer-hand">Pieced, quilted &amp; bound for ENG 6819</p>
+        <p>Dr. Anastasia Salter &middot; University of Central Florida &middot; Spring 2027</p>
+        <p class="footer-small">Interview videos and reading PDFs live in Webcourses.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Theme toggle.
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        var root = document.documentElement;
+        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+      });
+
+      // Piece each week (and each exercise's Discussion) into a quilt block:
+      // the heading plus everything up to the next heading of the same or higher level.
+      (function () {
+        var heads = document.querySelectorAll(
+          '.content h3[id^="week-"], .content h3[id^="final-reflection"], .content h3[id="discussion"], .content h3[id="submission"]');
+        heads.forEach(function (h, i) {
+          var block = document.createElement('div');
+          block.className = 'quilt-block fabric-' + (i % 6);
+          if (/spring-break/.test(h.id)) block.classList.add('rest');
+          var n = h.nextElementSibling;
+          h.parentNode.insertBefore(block, h);
+          block.appendChild(h);
+          while (n && !/^H[1-3]$/.test(n.tagName)) {
+            var next = n.nextElementSibling;
+            block.appendChild(n);
+            n = next;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+site_base: https://x.y/CM
+syllabus_file: index.md
+welcome_file: welcome.md
+assignment_groups: {exercises: Making Exercises, other: Course Requirements}
+weeks: [exercises/introductions, exercises/one_selfie, exercises/two_comic]
+extra: [exercises/reflection]
+breaks:
+  - {module: "Week Ten: Spring Break", week_start: 2027-03-15, after: exercises/two_comic,
+     text: "Enjoy the break! No readings or exercises this week."}
+activity_verification: {name: "Activity Verification", points: 3, open: 2027-01-11, due: 2027-01-15,
+                        module_of: exercises/introductions}
+rubric:
+  title: "Making Exercise Rubric"
+  criteria:
+    - {description: "Process documentation", long: "About five images.", points: 3}
+    - {description: "Engagement with readings", long: "Two works.", points: 2}
+    - {description: "Peer responses", long: "Two replies.", points: 2}
+interviews:
+  sullivan: {guest: "Anne Sullivan", video: media/interviews/edited/sullivan.mp4, captions: media/interviews/captions/sullivan.vtt}
+  bahl:     {guest: "Erin Kathleen Bahl", video: media/interviews/edited/bahl.mp4, captions: media/interviews/captions/bahl.vtt}
+pdfs:
+  exercises/introductions: [media/pdfs/RattoCriticalMaking.pdf, {file: media/pdfs/00_Provacations.pdf, title: "Provocations for Making"}]
+  exercises/one_selfie: [media/pdfs/01_Selfie.pdf, media/pdfs/not_here.pdf]

@@ -1,0 +1,54 @@
+site_base: https://anastasiasalter.net/CriticalMaking2027
+timezone: America/New_York      # informational: the deployer always uses America/New_York
+syllabus_file: index.md
+welcome_file: welcome.md        # repo-root md -> page "Welcome! (Read this first!)", first item of the first week
+assignment_groups: {exercises: Making Exercises, other: Course Requirements}
+weeks: [exercises/introductions, exercises/one_selfie, exercises/two_comic, exercises/three_gifs,
+        exercises/four_maps, exercises/five_hypertext, exercises/six_game, exercises/seven_generator,
+        exercises/eight_analysis, exercises/nine_generation, exercises/ten_code,
+        exercises/eleven_narrative, exercises/twelve_combinations, exercises/thirteen_tools]
+extra: [exercises/reflection]
+breaks:
+  - {module: "Week Ten: Spring Break", week_start: 2027-03-15, after: exercises/eight_analysis,
+     text: "Enjoy the break! No readings or exercises this week."}
+activity_verification: {name: "Activity Verification", points: 3, open: 2027-01-11, due: 2027-01-15,
+                        module_of: exercises/introductions}
+rubric:
+  title: "Making Exercise Rubric"
+  criteria:
+    - {description: "Process documentation", long: "Approximately five images documenting your making process, with a short narrative.", points: 3}
+    - {description: "Engagement with readings", long: "Cites and engages at least two works from this module.", points: 2}
+    - {description: "Peer responses", long: "At least two thoughtful replies to classmates.", points: 2}
+
+# Canvas-only interview videos and captions (paths relative to canvas/;
+# canvas/media/ is gitignored). A missing file leaves the placeholder.
+interviews:
+  sullivan: {guest: "Anne Sullivan", video: media/interviews/edited/sullivan.mp4, captions: media/interviews/captions/sullivan.vtt}
+  bahl:     {guest: "Erin Kathleen Bahl", video: media/interviews/edited/bahl.mp4, captions: media/interviews/captions/bahl.vtt}
+  skains:   {guest: "Lyle Skains", video: media/interviews/edited/skains.mp4, captions: media/interviews/captions/skains.vtt}
+  fan:      {guest: "Lai-Tze Fan", video: media/interviews/edited/fan.mp4, captions: media/interviews/captions/fan.vtt}
+  cox:      {guest: "Dan Cox", video: media/interviews/edited/cox.mp4, captions: media/interviews/captions/cox.vtt}
+  milligan: {guest: "Chloe Milligan", video: media/interviews/edited/milligan.mp4, captions: media/interviews/captions/milligan.vtt}
+  duvvoori: {guest: "Kavi Duvvoori", video: media/interviews/edited/duvvoori.mp4, captions: media/interviews/captions/duvvoori.vtt}
+  daedal:   {guest: "Quinn Daedal", video: media/interviews/edited/daedal.mp4, captions: media/interviews/captions/daedal.vtt}
+  flores:   {guest: "Leonardo Flores", video: media/interviews/edited/flores.mp4, captions: media/interviews/captions/flores.vtt}
+  whalen:   {guest: "Zach Whalen", video: media/interviews/edited/whalen.mp4, captions: media/interviews/captions/whalen.vtt}
+  bessette: {guest: "Lee Skallerup Bessette", video: media/interviews/edited/bessette.mp4, captions: media/interviews/captions/bessette.vtt}
+  barnes:   {guest: "Nikki Fragala Barnes", video: media/interviews/edited/barnes.mp4, captions: media/interviews/captions/barnes.vtt}
+
+# Canvas-only reading PDFs, uploaded to Files > Readings and linked on that
+# week's readings page. An entry may be {file: ..., title: ...}; a plain
+# path's link text is the file name without extension.
+pdfs:
+  exercises/introductions: [media/pdfs/RattoCriticalMaking.pdf, media/pdfs/00_Provacations.pdf]
+  exercises/one_selfie: [media/pdfs/01_Selfie.pdf]
+  exercises/two_comic: [media/pdfs/HertzMakingCritMaking.pdf, media/pdfs/02_Comic.pdf]
+  exercises/three_gifs: [media/pdfs/03_GIFs.pdf]
+  exercises/four_maps: [media/pdfs/04_Map.pdf, "media/pdfs/FAN - ESC masks.pdf"]
+  exercises/five_hypertext: [media/pdfs/05_Hypertext.pdf]
+  exercises/six_game: [media/pdfs/HarrerRadicalJamming.pdf, media/pdfs/06_Game.pdf]
+  exercises/seven_generator: [media/pdfs/07_Bots.pdf]
+  exercises/eight_analysis: [media/pdfs/DIgnazioKleinFeministData.pdf, media/pdfs/08_Analysis.pdf]
+  exercises/nine_generation: [media/pdfs/09_Generation.pdf]
+  exercises/ten_code: [media/pdfs/10_Conclusion.pdf]
+  exercises/twelve_combinations: [media/pdfs/LovelessIntro.pdf, media/pdfs/LovelessConclusion.pdf]

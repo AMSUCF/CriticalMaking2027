@@ -1,0 +1,16 @@
+title: "ENG 6819: Critical Making in Digital Humanities"
+description: "Spring 2027 - Critical making as scholarly practice in the digital humanities"
+# No remote theme: the quilt look lives in _layouts/default.html and assets/css/style.scss.
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+exclude:
+  - canvas/
+  - docs/
+  - README.md
+  - CLAUDE.md
+  - .venv/
+  - .venv-media/
+  - "*.imscc"

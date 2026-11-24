@@ -1,0 +1,995 @@
+---
+---
+
+/* ==========================================================================
+   Critical Making 2027: a quilt.
+   Palette from the instructor's selfie quilt: sunflower batik, deep violet,
+   raspberry, lilac, muslin backing, the blue-grey cutting mat, marigold thread.
+   Plain CSS (valid SCSS) so GitHub Pages' Sass build passes it through as is;
+   avoid min()/max() here (libsass treats them as Sass functions).
+   ========================================================================== */
+
+/* ----- Fabrics (shared by both themes) ----- */
+:root {
+  --sun: #f4c430;
+  --sun-deep: #d9a300;
+  --violet: #4b2e83;
+  --raspberry: #c2185b;
+  --lilac: #cbb2f0;
+  --mat: #2f5b73;
+  --marigold: #e9782b;
+  --cream: #fff8e7;
+  --ink-on-light: #2a1d47;
+
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Figtree', 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-hand: 'Caveat', 'Segoe Print', 'Comic Sans MS', cursive;
+  --font-mono: 'JetBrains Mono', Consolas, monospace;
+}
+
+/* ----- Daylight: muslin on the cutting table ----- */
+:root,
+:root[data-theme="light"] {
+  --bg: #f7f1e3;
+  --bg-weave: rgba(122, 96, 52, 0.045);
+  --surface: #fffaf0;
+  --surface-2: #efe5cf;
+  --text: #2a1d47;
+  --text-soft: #5b4d75;
+  --heading: #4b2e83;
+  --link: #a3124c;
+  --link-hover: #4b2e83;
+  --thread: #c2185b;
+  --stitch: rgba(42, 29, 71, 0.45);
+  --shadow: 0 2px 0 rgba(42, 29, 71, 0.08), 0 10px 24px -12px rgba(42, 29, 71, 0.35);
+  --grid-line: rgba(47, 91, 115, 0.13);
+  --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='10' viewBox='0 0 40 10'%3E%3Cpath d='M0 5 Q 10 0 20 5 T 40 5' fill='none' stroke='%23c2185b' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  color-scheme: light;
+}
+
+/* ----- Lamplight: indigo batik after dark ----- */
+:root[data-theme="dark"] {
+  --bg: #1a1430;
+  --bg-weave: rgba(255, 255, 255, 0.025);
+  --surface: #241c40;
+  --surface-2: #2f2552;
+  --text: #f4ecd8;
+  --text-soft: #c9bde0;
+  --heading: #f6cd3f;
+  --link: #ffb3cf;
+  --link-hover: #f6cd3f;
+  --thread: #ff7aa8;
+  --stitch: rgba(244, 236, 216, 0.4);
+  --shadow: 0 2px 0 rgba(0, 0, 0, 0.3), 0 12px 28px -12px rgba(0, 0, 0, 0.7);
+  --grid-line: rgba(203, 178, 240, 0.12);
+  --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='10' viewBox='0 0 40 10'%3E%3Cpath d='M0 5 Q 10 0 20 5 T 40 5' fill='none' stroke='%23ff7aa8' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+
+/* No-JS fallback follows the system setting. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #1a1430;
+    --bg-weave: rgba(255, 255, 255, 0.025);
+    --surface: #241c40;
+    --surface-2: #2f2552;
+    --text: #f4ecd8;
+    --text-soft: #c9bde0;
+    --heading: #f6cd3f;
+    --link: #ffb3cf;
+    --link-hover: #f6cd3f;
+    --thread: #ff7aa8;
+    --stitch: rgba(244, 236, 216, 0.4);
+    --grid-line: rgba(203, 178, 240, 0.12);
+    color-scheme: dark;
+  }
+}
+
+/* ----- Base: a loosely woven ground ----- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image:
+    repeating-linear-gradient(0deg, var(--bg-weave) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, var(--bg-weave) 0 1px, transparent 1px 5px);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 2000;
+  padding: 0.5rem 1rem;
+  background: var(--violet);
+  color: var(--cream);
+  border-radius: 999px;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+:focus-visible {
+  outline: 3px dashed var(--thread);
+  outline-offset: 3px;
+}
+
+/* ----- Theme toggle: a big sewing button ----- */
+.theme-toggle {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1000;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 3px solid var(--violet);
+  background: var(--sun);
+  color: var(--violet);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow);
+  outline: 2px dashed rgba(75, 46, 131, 0.55);
+  outline-offset: -9px;
+  transition: transform 0.25s ease;
+}
+
+.theme-toggle:hover {
+  transform: rotate(-18deg) scale(1.06);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px dashed var(--thread);
+  outline-offset: 3px;
+}
+
+.theme-toggle svg {
+  display: none;
+}
+
+:root[data-theme="light"] .icon-sun,
+:root[data-theme="dark"] .icon-moon {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-toggle {
+  background: var(--lilac);
+}
+
+/* ==========================================================================
+   Header: a sunflower quilt panel with raw-edge applique and violet binding
+   ========================================================================== */
+.quilt-header {
+  position: relative;
+  overflow: hidden;
+  padding: 72px 20px 64px;
+  background-color: var(--sun);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='70' viewBox='0 0 140 70'%3E%3Cpath d='M0 18 C 20 2, 50 34, 70 18 S 120 2, 140 18 M0 53 C 20 37, 50 69, 70 53 S 120 37, 140 53' fill='none' stroke='%23a86d00' stroke-width='2' stroke-dasharray='6 4' stroke-linecap='round' opacity='.5'/%3E%3C/svg%3E");
+  border-top: 12px solid var(--violet);
+  border-bottom: 12px solid var(--violet);
+}
+
+/* binding stitch line just inside the violet edge */
+.quilt-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  border-bottom: 2px dashed rgba(75, 46, 131, 0.6);
+}
+
+.applique {
+  position: absolute;
+  outline: 2px dashed rgba(255, 248, 231, 0.75);
+  outline-offset: -7px;
+  animation: drift 9s ease-in-out infinite alternate;
+}
+
+.a1 {
+  width: 220px;
+  height: 170px;
+  left: -40px;
+  top: 18px;
+  background: var(--violet);
+  border-radius: 58% 42% 63% 37% / 45% 58% 42% 55%;
+  transform: rotate(-12deg);
+}
+
+.a2 {
+  width: 150px;
+  height: 120px;
+  right: 7%;
+  top: -30px;
+  background: var(--raspberry);
+  border-radius: 40% 60% 35% 65% / 60% 40% 60% 40%;
+  animation-delay: -3s;
+}
+
+.a3 {
+  width: 120px;
+  height: 120px;
+  right: 22%;
+  bottom: -46px;
+  background: var(--lilac);
+  border-radius: 50% 50% 45% 55% / 55% 45% 55% 45%;
+  outline-color: rgba(75, 46, 131, 0.5);
+  animation-delay: -6s;
+}
+
+.a4 {
+  /* half-square triangle */
+  width: 110px;
+  height: 110px;
+  left: 18%;
+  bottom: -36px;
+  background: linear-gradient(135deg, var(--mat) 0 50%, var(--marigold) 50% 100%);
+  border-radius: 6px;
+  transform: rotate(9deg);
+  outline-color: rgba(255, 248, 231, 0.6);
+  animation-delay: -1.5s;
+}
+
+@keyframes drift {
+  from { translate: 0 0; }
+  to   { translate: 6px -8px; }
+}
+
+.quilt-label {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 26px 34px 24px;
+  background: var(--cream);
+  color: var(--ink-on-light);
+  border-radius: 6px;
+  transform: rotate(-1.2deg);
+  box-shadow: 0 3px 0 rgba(42, 29, 71, 0.15), 0 18px 30px -14px rgba(42, 29, 71, 0.55);
+  outline: 2px dashed var(--raspberry);
+  outline-offset: -11px;
+}
+
+.quilt-label p {
+  margin: 0;
+}
+
+.label-kicker {
+  font-family: var(--font-hand);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--raspberry);
+  line-height: 1.1;
+}
+
+.site-title {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  font-weight: 800;
+  font-size: clamp(1.7rem, 4.4vw, 2.9rem);
+  line-height: 1.08;
+  margin: 6px 0 10px !important;
+  letter-spacing: -0.01em;
+}
+
+.site-title a,
+.site-title a:visited {
+  color: var(--violet);
+  text-decoration: none;
+  background: none;
+}
+
+.site-description {
+  color: #5b4d75;
+  font-size: 1.02rem;
+}
+
+/* ----- Selvedge: the printed edge of the fabric ----- */
+.selvedge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 7px 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  background: var(--surface-2);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--stitch);
+}
+
+.selvedge .dots {
+  display: inline-flex;
+  gap: 5px;
+  flex: none;
+}
+
+.selvedge i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sun);
+}
+
+.selvedge i:nth-child(2) { background: var(--marigold); }
+.selvedge i:nth-child(3) { background: var(--raspberry); }
+.selvedge i:nth-child(4) { background: var(--lilac); }
+.selvedge i:nth-child(5) { background: var(--violet); }
+.selvedge i:nth-child(6) { background: var(--mat); }
+
+/* ==========================================================================
+   Page body
+   ========================================================================== */
+.wrapper {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 36px 20px 20px;
+}
+
+.back-link {
+  margin-bottom: 8px;
+}
+
+.back-link a {
+  display: inline-block;
+  padding: 6px 16px;
+  background: var(--violet);
+  color: var(--cream) !important;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  background-image: none;
+  outline: 1.5px dashed rgba(255, 248, 231, 0.6);
+  outline-offset: -5px;
+  transition: transform 0.2s ease;
+}
+
+.back-link a:hover {
+  transform: translateX(-3px) rotate(-1deg);
+}
+
+/* ----- Type ----- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  color: var(--heading);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+  font-weight: 800;
+  margin: 0.4em 0 0.6em;
+}
+
+h2 {
+  font-size: clamp(1.45rem, 3.4vw, 1.85rem);
+  margin: 2.2em 0 0.9em;
+  padding-bottom: 12px;
+  background: var(--wave) left bottom / 40px 10px repeat-x;
+}
+
+h3 {
+  font-size: 1.3rem;
+  margin: 1.8em 0 0.6em;
+}
+
+h4 {
+  display: inline-block;
+  margin: 1.4em 0 0.4em;
+  padding: 2px 14px 2px 12px;
+  font-family: var(--font-hand);
+  font-variation-settings: normal;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--surface-2);
+  border-radius: 3px 14px 14px 3px;
+  outline: 1.5px dashed var(--stitch);
+  outline-offset: -4px;
+}
+
+p {
+  margin: 0 0 1.15em;
+}
+
+strong {
+  font-weight: 700;
+}
+
+em {
+  font-style: italic;
+}
+
+/* ----- Links: a stitched underline that goes wavy on hover ----- */
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  transition: color 0.15s ease;
+}
+
+a:visited {
+  color: var(--link);
+}
+
+a:hover {
+  color: var(--link-hover);
+  text-decoration-style: wavy;
+  text-decoration-thickness: 1.5px;
+}
+
+/* ----- Lists: sewing-button bullets ----- */
+ul {
+  list-style: none;
+  padding-left: 1.7em;
+}
+
+ul li {
+  position: relative;
+  margin-bottom: 0.45em;
+}
+
+ul li::before {
+  --button: var(--raspberry);
+  content: "";
+  position: absolute;
+  left: -1.45em;
+  top: 0.42em;
+  width: 0.82em;
+  height: 0.82em;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 50%, var(--bg) 0 0.09em, transparent 0.1em),
+    radial-gradient(circle at 66% 50%, var(--bg) 0 0.09em, transparent 0.1em),
+    var(--button);
+  box-shadow: inset 0 0 0 0.08em rgba(0, 0, 0, 0.15);
+}
+
+ul li:nth-child(6n+2)::before { --button: var(--sun-deep); }
+ul li:nth-child(6n+3)::before { --button: var(--violet); }
+ul li:nth-child(6n+4)::before { --button: var(--marigold); }
+ul li:nth-child(6n+5)::before { --button: var(--mat); }
+ul li:nth-child(6n)::before   { --button: #9b7fd1; }
+
+:root[data-theme="dark"] ul li:nth-child(6n+3)::before { --button: var(--lilac); }
+
+/* nested lists: a little cross-stitch */
+ul ul li::before {
+  content: "\00D7";
+  background: none;
+  box-shadow: none;
+  width: auto;
+  height: auto;
+  top: -0.05em;
+  left: -1.1em;
+  color: var(--thread);
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+ol {
+  padding-left: 1.6em;
+}
+
+ol li {
+  margin-bottom: 0.45em;
+}
+
+ol li::marker {
+  color: var(--thread);
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+/* ----- Divider: cut along the dotted line ----- */
+hr {
+  position: relative;
+  height: 0;
+  margin: 2.8em 0;
+  border: 0;
+  border-top: 2px dashed var(--stitch);
+  overflow: visible;
+}
+
+hr::after {
+  content: "\2702";
+  position: absolute;
+  left: 8px;
+  top: -0.85em;
+  padding: 0 6px;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  color: var(--thread);
+  background: var(--bg);
+}
+
+/* ----- Contents: laid out on a cutting mat ----- */
+#contents + ul {
+  position: relative;
+  margin: 0 0 1.5em;
+  padding: 38px 28px 22px 46px;
+  background-color: var(--mat);
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255, 220, 90, 0.55) 0 1px, transparent 1px 120px),
+    repeating-linear-gradient(0deg, rgba(255, 220, 90, 0.55) 0 1px, transparent 1px 120px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 24px);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  color: var(--cream);
+}
+
+/* ruler ticks along the top edge */
+#contents + ul::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 18px;
+  border-radius: 14px 14px 0 0;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 248, 231, 0.9) 0 2px, transparent 2px 24px) left top / 100% 14px no-repeat,
+    repeating-linear-gradient(90deg, rgba(255, 248, 231, 0.6) 0 1px, transparent 1px 6px) left top / 100% 7px no-repeat;
+}
+
+#contents + ul a,
+#contents + ul a:visited {
+  color: var(--cream);
+  text-decoration-color: rgba(255, 220, 90, 0.8);
+}
+
+#contents + ul a:hover {
+  color: #ffe27a;
+}
+
+#contents + ul li::before {
+  --button: var(--sun);
+}
+
+#contents + ul ul li::before {
+  color: #ffe27a;
+}
+
+/* ==========================================================================
+   Quilt blocks: one per week (the layout script wraps each week heading and
+   its lists in .quilt-block). Each block has its own fabric.
+   ========================================================================== */
+.quilt-block {
+  --fabric: var(--sun);
+  --on-fabric: var(--ink-on-light);
+  position: relative;
+  margin: 2.6em 0;
+  padding: 0 26px 14px;
+  background: var(--surface);
+  border: 7px solid var(--fabric);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  outline: 2px dashed var(--stitch);
+  outline-offset: -16px;
+  transition: transform 0.25s ease;
+}
+
+.quilt-block:nth-of-type(odd) {
+  transform: rotate(-0.35deg);
+}
+
+.quilt-block:nth-of-type(even) {
+  transform: rotate(0.3deg);
+}
+
+.quilt-block:hover {
+  transform: rotate(0deg) translateY(-2px);
+}
+
+/* half-square-triangle corner */
+.quilt-block::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 54px;
+  height: 54px;
+  background: linear-gradient(225deg, var(--fabric) 0 50%, transparent 50%);
+  pointer-events: none;
+}
+
+/* the week heading is a raw-edge applique patch on the block */
+.quilt-block > h3 {
+  display: inline-block;
+  margin: -0.85em 0 0.9em -6px;
+  padding: 10px 20px 12px;
+  background: var(--fabric);
+  color: var(--on-fabric);
+  font-size: clamp(1.15rem, 2.8vw, 1.4rem);
+  border-radius: 14px 26px 12px 30px / 26px 12px 30px 14px;
+  outline: 2px dashed currentColor;
+  outline-offset: -6px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12);
+  transform: rotate(-1deg);
+}
+
+.fabric-0 { --fabric: var(--sun);       --on-fabric: var(--ink-on-light); }
+.fabric-1 { --fabric: var(--violet);    --on-fabric: var(--cream); }
+.fabric-2 { --fabric: var(--raspberry); --on-fabric: var(--cream); }
+.fabric-3 { --fabric: var(--lilac);     --on-fabric: var(--ink-on-light); }
+.fabric-4 { --fabric: var(--mat);       --on-fabric: var(--cream); }
+.fabric-5 { --fabric: var(--marigold);  --on-fabric: var(--ink-on-light); }
+
+:root[data-theme="dark"] .fabric-1 {
+  --fabric: #6f4bb8;
+}
+
+/* Spring break: an unpieced length of muslin */
+.quilt-block.rest {
+  --fabric: var(--surface-2);
+  --on-fabric: var(--text);
+  border-style: dashed;
+  border-width: 3px;
+  outline: none;
+}
+
+.quilt-block.rest::after {
+  display: none;
+}
+
+.quilt-block.rest > h3::after {
+  content: "  \2615";
+}
+
+/* The week's making exercise: a pattern tag in the block's fabric */
+.quilt-block li > strong > a[href*="exercises/"] {
+  display: inline-block;
+  margin: 2px 0;
+  padding: 4px 16px 5px;
+  background: var(--fabric);
+  color: var(--on-fabric);
+  border-radius: 4px 18px 18px 4px;
+  text-decoration: none;
+  outline: 1.5px dashed currentColor;
+  outline-offset: -5px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.quilt-block li > strong > a[href*="exercises/"]::after {
+  content: "  \2192";
+}
+
+.quilt-block li > strong > a[href*="exercises/"]:hover {
+  color: var(--on-fabric);
+  transform: rotate(-1.5deg) translateX(2px);
+}
+
+/* ----- Tables: woven ----- */
+table {
+  width: 100%;
+  margin: 1.6em 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--surface);
+  border: 3px solid var(--violet);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  font-size: 0.97rem;
+}
+
+th {
+  padding: 12px 16px;
+  text-align: left;
+  background: var(--violet);
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+td {
+  padding: 12px 16px;
+  vertical-align: top;
+  border-top: 2px dashed var(--stitch);
+}
+
+tbody tr:nth-child(even) td {
+  background-image: repeating-linear-gradient(90deg, rgba(244, 196, 48, 0.14) 0 6px, transparent 6px 12px);
+}
+
+:root[data-theme="dark"] tbody tr:nth-child(even) td {
+  background-image: repeating-linear-gradient(90deg, rgba(203, 178, 240, 0.07) 0 6px, transparent 6px 12px);
+}
+
+td:first-child {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.2em;
+  color: var(--thread);
+  white-space: nowrap;
+}
+
+/* ----- Blockquote: a sewn-in quilt label ----- */
+blockquote {
+  margin: 1.6em 0;
+  padding: 18px 26px;
+  background: var(--surface-2);
+  border-radius: 8px;
+  outline: 2px dashed var(--stitch);
+  outline-offset: -8px;
+  color: var(--text);
+  transform: rotate(-0.4deg);
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ----- Code: charted on aida cloth ----- */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 0.1em 0.4em;
+  background: var(--surface-2);
+  border-radius: 4px;
+}
+
+pre {
+  padding: 18px 20px;
+  overflow-x: auto;
+  background-color: var(--surface);
+  background-image:
+    repeating-linear-gradient(0deg, var(--grid-line) 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(90deg, var(--grid-line) 0 1px, transparent 1px 10px);
+  border: 2px solid var(--mat);
+  border-radius: 8px;
+  line-height: 1.55;
+}
+
+pre code {
+  padding: 0;
+  background: none;
+  font-size: 0.86rem;
+}
+
+/* ----- Images: taped into the sketchbook ----- */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* photos written as list items ("- ![...]") get no bullet */
+li:has(> img:only-child),
+li:has(> p > img:only-child) {
+  list-style: none;
+}
+
+li:has(> img:only-child)::before,
+li:has(> p > img:only-child)::before {
+  display: none;
+}
+
+p > img,
+li > img {
+  display: block;
+  margin: 1.8em auto 1.2em;
+  padding: 10px;
+  background: #fffdf6;
+  border-radius: 3px;
+  box-shadow: var(--shadow);
+  transform: rotate(-0.8deg);
+  transition: transform 0.25s ease;
+}
+
+p:nth-of-type(even) > img,
+li:nth-child(even) > img {
+  transform: rotate(0.7deg);
+}
+
+p > img:hover,
+li > img:hover {
+  transform: rotate(0deg) scale(1.01);
+}
+
+/* washi tape */
+p:has(> img) {
+  position: relative;
+}
+
+p:has(> img)::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 1.1em;
+  left: 50%;
+  width: 120px;
+  height: 26px;
+  transform: translateX(-50%) rotate(-3deg);
+  background: repeating-linear-gradient(45deg, rgba(203, 178, 240, 0.85) 0 8px, rgba(255, 248, 231, 0.7) 8px 16px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+}
+
+/* ----- Footer: the quilt label on the back ----- */
+.site-footer {
+  padding: 30px 20px 60px;
+}
+
+.footer-label {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 22px 28px;
+  text-align: center;
+  background: var(--surface);
+  color: var(--text-soft);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  outline: 2px dashed var(--thread);
+  outline-offset: -10px;
+  transform: rotate(1deg);
+  font-size: 0.92rem;
+}
+
+.footer-label p {
+  margin: 0.2em 0;
+}
+
+.footer-hand {
+  font-family: var(--font-hand);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.footer-small {
+  font-size: 0.82rem;
+  opacity: 0.85;
+}
+
+/* ----- Syntax highlighting (Rouge), in thread colors ----- */
+.highlight .c, .highlight .c1, .highlight .cm { color: var(--text-soft); font-style: italic; }
+.highlight .k, .highlight .kd, .highlight .kn { color: var(--raspberry); font-weight: 600; }
+.highlight .s, .highlight .s1, .highlight .s2 { color: #2f7d5b; }
+.highlight .mi, .highlight .mf { color: var(--marigold); }
+.highlight .nf, .highlight .nx { color: var(--violet); }
+:root[data-theme="dark"] .highlight .s,
+:root[data-theme="dark"] .highlight .s1,
+:root[data-theme="dark"] .highlight .s2 { color: #8fe0b5; }
+:root[data-theme="dark"] .highlight .nf,
+:root[data-theme="dark"] .highlight .nx { color: var(--lilac); }
+:root[data-theme="dark"] .highlight .k,
+:root[data-theme="dark"] .highlight .kd { color: #ff7aa8; }
+
+/* ----- Small screens ----- */
+@media (max-width: 700px) {
+  body {
+    font-size: 1rem;
+  }
+
+  .theme-toggle {
+    top: 10px;
+    right: 10px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .quilt-header {
+    padding: 58px 14px 46px;
+  }
+
+  .quilt-label {
+    padding: 20px 20px 18px;
+    transform: rotate(-0.6deg);
+  }
+
+  .a1 { width: 140px; height: 110px; }
+  .a2 { width: 100px; height: 80px; right: 18%; }
+  .a3, .a4 { display: none; }
+
+  .selvedge {
+    justify-content: flex-start;
+  }
+
+  .wrapper {
+    padding: 26px 16px 12px;
+  }
+
+  .quilt-block {
+    padding: 0 16px 10px;
+    border-width: 5px;
+    outline-offset: -12px;
+  }
+
+  .quilt-block:nth-of-type(odd),
+  .quilt-block:nth-of-type(even) {
+    transform: none;
+  }
+
+  #contents + ul {
+    padding: 32px 16px 16px 36px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+/* ----- Motion ----- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .quilt-block:hover,
+  p > img:hover,
+  .theme-toggle:hover {
+    transform: none;
+  }
+}
+
+/* ----- Print: just the pattern ----- */
+@media print {
+  .theme-toggle,
+  .applique,
+  .selvedge,
+  .skip-link,
+  .back-link {
+    display: none;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .quilt-header {
+    padding: 12px 0;
+    background: none;
+    border: 0;
+  }
+
+  .quilt-label,
+  .quilt-block,
+  blockquote,
+  p > img {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .quilt-block {
+    break-inside: avoid;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #555;
+  }
+}
