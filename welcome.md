@@ -42,4 +42,4 @@ If you have any questions after reading the syllabus, please reach out to me!
 
 ## FREE Textbooks
 
-All required readings are either linked as open access, provided as PDFs within Webcourses, or available as free eBooks (through the UCF Library or through general open access). I do recommend getting a Claude subscription later in the semester, but I will review options and recommendations at that stage - all other materials are available at no cost.
+All required readings are either linked as open access, provided as PDFs within Webcourses, or available as free eBooks (through the UCF Library or through general open access), so all course materials are available at no cost.
