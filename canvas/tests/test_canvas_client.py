@@ -273,6 +273,27 @@ def test_set_media_tracks_gives_up_after_retries():
     assert waits == [5, 15, 30] and len(responses.calls) == 4
 
 
+@responses.activate
+def test_set_media_tracks_treats_204_as_not_ready():
+    # a just-uploaded video (media_entry_id still "maybe") answers 204 with
+    # no body and saves no track: retry, as for 401/404
+    url = f"{API}/api/v1/media_attachments/7/media_tracks"
+    responses.put(url, status=204)
+    responses.put(url, json=[{"id": 1}])
+    waits = []
+    assert c42(sleep=waits.append).set_media_tracks(7, TRACKS) == [{"id": 1}]
+    assert waits == [5]
+
+
+@responses.activate
+def test_set_media_tracks_204_every_time_raises_http_error():
+    url = f"{API}/api/v1/media_attachments/7/media_tracks"
+    for _ in range(4):
+        responses.put(url, status=204)
+    with pytest.raises(requests.HTTPError, match="204"):
+        c42(sleep=lambda s: None).set_media_tracks(7, TRACKS)
+
+
 # --- rubrics ----------------------------------------------------------------------
 
 CRITERIA = [{"description": "Process documentation", "long": "Five images.", "points": 3},

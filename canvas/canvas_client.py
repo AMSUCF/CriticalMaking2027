@@ -298,10 +298,10 @@ class CanvasClient:
         """Replace an uploaded video's caption tracks.
 
         PUT /api/v1/media_attachments/:attachment_id/media_tracks with a JSON
-        array of {locale, content, kind}. Canvas answers 401/404 (or 5xx)
-        until it has built the video's media object, so this retries on
-        `caption_retry_delays` and re-raises the last error if it never
-        succeeds.
+        array of {locale, content, kind}. Canvas answers 401/404 (or 5xx),
+        or 204 with no body (saving nothing), until it has built the video's
+        media object, so this retries on `caption_retry_delays` and
+        re-raises the last error if it never succeeds.
         """
         url = f"{self.root}/media_attachments/{attachment_id}/media_tracks"
         delays = list(self.caption_retry_delays)
@@ -309,6 +309,10 @@ class CanvasClient:
             r = self.s.put(url, json=tracks, params={"include[]": "content"})
             try:
                 r.raise_for_status()
+                if r.status_code == 204 or not r.content:
+                    raise requests.HTTPError(
+                        f"{r.status_code} No Content: video {attachment_id} "
+                        "has no media object yet", response=r)
                 return r.json()
             except requests.HTTPError:
                 if not delays:
