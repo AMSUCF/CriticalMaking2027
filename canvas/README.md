@@ -68,7 +68,8 @@ order:
    (links to the uploaded PDFs) and **Featured Interview: {guest}** (the
    uploaded video, or a placeholder). Only for stems in `weeks`, and skipped
    when a week has no readings, PDFs, or interview;
-3. the exercise page (title = the front matter `title`);
+3. the exercise page, titled `"Overview: " + title` (front matter `title`) so it is
+   not confused with the discussion or assignment that carries the bare title;
 4. the graded discussion — or, for `type: assignment`, an assignment taking a
    URL or upload — with the Making Exercise rubric if `rubric: true`;
 5. *(the `activity_verification.module_of` stem only)* the Activity

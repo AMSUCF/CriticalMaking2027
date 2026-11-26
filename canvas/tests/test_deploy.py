@@ -34,7 +34,8 @@ def test_plan_week_path_stem_links_and_dates(course):
     p = _plan(course, "exercises/one_selfie")
     assert p["stem"] == "exercises/one_selfie" and p["name"] == "one_selfie"
     assert p["module"] == "Week Two: Selfie" and p["label"] == "Week Two"
-    assert p["title"] == "Making Exercise One: Selfie"
+    # the full-description page is labelled so it can't be mistaken for the discussion
+    assert p["title"] == "Overview: Making Exercise One: Selfie"
     assert p["graded_title"] == 'Making Exercise One: "Selfie"'
     assert p["kind"] == "discussion" and p["has_graded"] and p["rubric"]
     assert p["group"] == "exercises" and p["points"] == 7
@@ -574,7 +575,7 @@ def test_missing_welcome_file_is_a_warning(course, monkeypatch, capsys):
 def test_state_saved_when_deploy_fails_midway(course, monkeypatch):
     class Boom(FakeCanvas):
         def upsert_page(self, title, *a, **k):
-            if title == "Making Exercise Two: Comic":
+            if title == "Overview: Making Exercise Two: Comic":
                 r = requests.Response(); r.status_code = 500
                 raise requests.HTTPError("500 Server Error", response=r)
             return super().upsert_page(title, *a, **k)

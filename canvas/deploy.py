@@ -24,6 +24,7 @@ from converter import (TZ, apply_canvas_style, due_at_utc, extract_readings, loa
 
 STATE_FILE = Path(".state.json")
 WELCOME_TITLE = "Welcome! (Read this first!)"
+PAGE_TITLE_PREFIX = "Overview: "
 
 # an uploaded Canvas video embed, hand-placed on a live readings page —
 # deploys keep it in place of the placeholder paragraph
@@ -77,6 +78,9 @@ def plan_week(stem: str, root: Path, cfg: dict, syllabus_md: str = "", media=Non
         doc.body, "Submission" if kind == "assignment" else "Discussion")
     label = week_label(c["module"])
     title = doc.meta.get("title") or c["module"]
+    # the Canvas page with the full exercise description; the prefix sets it
+    # apart from the discussion/assignment, which keeps the bare title
+    page_title = f"{PAGE_TITLE_PREFIX}{title}"
 
     # the Canvas-only readings page: syllabus readings, reading PDFs, interview
     readings_html = placeholder = ""
@@ -109,7 +113,7 @@ def plan_week(stem: str, root: Path, cfg: dict, syllabus_md: str = "", media=Non
         "name": Path(stem).name,
         "module": c["module"],
         "label": label,
-        "title": title,
+        "title": page_title,
         "kind": kind,
         "week_start": c["week_start"],
         "points": int(c["points"]),
